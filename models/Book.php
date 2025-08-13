@@ -38,6 +38,7 @@ class Book extends \yii\db\ActiveRecord
             [['title'], 'required'],
             [['author', 'description'], 'string', 'max' => 255],
             ['title', 'string', 'max' => 64],
+            ['is_public', 'boolean', 'trueValue' => 1, 'falseValue' => 0]
         ];
     }
 

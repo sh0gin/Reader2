@@ -34,6 +34,9 @@ class Params extends \yii\db\ActiveRecord
             [['font_family', 'text_color', 'background_color', 'font_size'], 'required'],
             [['font_size'], 'integer'],
             [['font_family', 'text_color', 'background_color'], 'string', 'max' => 255],
+
+            ['text_color', 'match', 'pattern' => '/^#[A-Z0-9]{6}$/'],
+            ['background_color', 'match', 'pattern' => '/^#[A-Z0-9]{6}$/']
         ];
     }
 

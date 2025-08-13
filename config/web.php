@@ -95,16 +95,38 @@ $config = [
                 'OPTIONS api/login' => 'options',
 
                 'POST api/books/upload' => 'book/create',
-                'OPTIONS api/books/upload' => 'options',   
+                'OPTIONS api/books/upload' => 'options',
 
                 'GET api/books' => 'book/get-books',
                 'OPTIONS api/books' => 'options',   
+
+                'GET api/books/progress' => 'book/get-books-progress',
+                'OPTIONS api/books/progress' => 'options',   
 
                 'GET api/books/<id>' => 'book/get-books-info-all',
                 'OPTIONS api/books/<id>' => 'options',   
 
                 'DELETE api/books/<id>' => 'book/delete-books',
                 'OPTIONS api/books/<id>' => 'options',   
+
+                'PATCH api/books/<id>' => 'book/change-books-info',
+                'OPTIONS api/books/<id>' => 'options',
+
+                'POST api/books/<id>/progress' => 'book/set-progress',
+                'OPTIONS api/books/<id>/progress' => 'options',   
+
+                'GET api/books/<id>/progress' => 'book/get-progress',
+                'OPTIONS api/books/<id>/progress' => 'options',   
+
+                'POST api/user/settings' => 'user/set-users-config',
+                'OPTIONS api/user/settings' => 'options',    
+
+                'POST api/logout' => 'user/logout',
+                'OPTIONS api/logout' => 'options',    
+
+                'PUT api/books/<id>/change-visibility' => 'book/change-visibility',
+                'OPTIONS api/logout' => 'options',    
+
             ],
         ]
     ],

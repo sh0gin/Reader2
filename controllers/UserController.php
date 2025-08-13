@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\Params;
 use app\models\Role;
 use app\models\User;
 use Yii;
@@ -41,7 +42,7 @@ class UserController extends  \yii\rest\ActiveController
 
         $auth = [
             'class' => HttpBearerAuth::class,
-            'only' => ['logout'],
+            'only' => ['logout', 'set-users-config', 'logout'],
         ];
 
         // re-add authentication filter
@@ -65,11 +66,6 @@ class UserController extends  \yii\rest\ActiveController
         return $actions;
     }
 
-    public function actionIndex()
-    {
-        return $this->render('index');
-    }
-
     public function actionRegister()
     {
         $model = new User();
@@ -80,6 +76,14 @@ class UserController extends  \yii\rest\ActiveController
         if ($model->validate()) {
             $model->password = Yii::$app->security->generatePasswordHash($model->password);
             $model->save();
+
+            $configUser = new Params();
+            $configUser->font_family = 'Arial';
+            $configUser->font_size = 16;
+            $configUser->text_color = '#000000';
+            $configUser->background_color = '#FFFFFF';
+            $configUser->user_id = $model->id;
+            $configUser->save(false);
             return $this->asJson([
                 'data' => [
                     'user' => [
@@ -140,5 +144,59 @@ class UserController extends  \yii\rest\ActiveController
                 ]
             ]);
         }
+    }
+
+
+    public function actionSetUsersConfig()
+    {
+
+        if (Yii::$app->request->post()) {
+            $model = Params::findOne(['user_id' => Yii::$app->user->id]);
+            $model->load(Yii::$app->request->post(), '');
+            if ($model->save()) {
+                return $this->asJson([
+                    'data' => [
+                        'settings' => [
+                            "font_family" => $model->font_family,
+                            "font_size" => $model->font_size,
+                            "text_color" => $model->text_color,
+                            "background_color" => $model->background_color
+                        ],
+                        'code' => 200,
+                        'message' => 'Настройки чтения сохранены',
+                    ]
+                ]);
+            } else {
+                return $this->asJson([
+                    'errors' => [
+                        'code' => 422,
+                        'message' => 'Validation Error',
+                        'errors' => $model->errors,
+                    ]
+                ]);
+            }
+        } else {
+            $model = Params::findOne(['user_id' => Yii::$app->user->id]);
+            return $this->asJson([
+                'data' => [
+                    'settings' => [
+                        "font_family" => $model->font_family,
+                        "font_size" => $model->font_size,
+                        "text_color" => $model->text_color,
+                        "background_color" => $model->background_color
+                    ],
+                    'code' => 200,
+                    'message' => 'Настройки чтения получены',
+                ]
+            ]);
+        }
+    }
+
+    public function actionLogout() {
+        $user = User::findOne(Yii::$app->user->id);
+        $user->token = Null;
+        $user->save(false);
+        Yii::$app->response->statusCode = 204;
+        return;
     }
 }

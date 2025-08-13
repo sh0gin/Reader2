@@ -54,6 +54,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
     /**
      * {@inheritdoc}
      */
+
     public function attributeLabels()
     {
         return [
@@ -67,12 +68,14 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
             'token' => 'Token',
         ];
     }
-
-    public function getIsAdmin() {
+    
+// книги // облако файлов // встречи // 
+    public function getIsAdmin()
+    {
         return $this->role_id == Role::getRoleId('admin');
     }
 
-     public static function findIdentity($id)
+    public static function findIdentity($id)
     {
         return static::findOne($id);
     }
